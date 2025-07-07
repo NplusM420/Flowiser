@@ -1,0 +1,36 @@
+{
+    "permissions": {
+        "allow": [
+            "Bash(ls:*)",
+            "Bash(find:*)",
+            "Bash(grep:*)",
+            "Bash(mkdir:*)",
+            "Bash(pnpm build)",
+            "Bash(pnpm tsc:*)",
+            "Bash(npx gulp:*)",
+            "Bash(pnpm exec tsc:*)",
+            "Bash(chmod:*)",
+            "Bash(bash:*)",
+            "Bash(npx tsc:*)",
+            "Bash(rm:*)",
+            "Bash(pnpm exec gulp:*)",
+            "Bash(pnpm install:*)",
+            "Bash(pnpm list:*)",
+            "Bash(pnpm exec turbo:*)",
+            "Bash(pnpm add:*)",
+            "Bash(npx turbo:*)",
+            "Bash(pnpm run:*)",
+            "Bash(node:*)",
+            "Bash(timeout 60 pnpm exec tsc)",
+            "Bash(timeout 30 pnpm exec tsc)",
+            "Bash(true)",
+            "Bash(timeout 30 pnpm exec tsc:*)",
+            "Bash(echo:*)",
+            "Bash(rg:*)",
+            "Bash(pnpm lint:*)",
+            "Bash(npx eslint:*)",
+            "Bash(curl:*)"
+        ],
+        "deny": []
+    }
+}

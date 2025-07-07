@@ -1,5 +1,5 @@
 import { flatten } from 'lodash'
-import { Tool, StructuredTool } from '@langchain/core/tools'
+import { Tool } from '@langchain/core/tools'
 import { BaseChatModel } from '@langchain/core/language_models/chat_models'
 import { AIMessage, HumanMessage, SystemMessage } from '@langchain/core/messages'
 import { VectorStoreRetriever } from '@langchain/core/vectorstores'
@@ -10,7 +10,6 @@ import { INode, INodeData, INodeParams } from '../../../src/Interface'
 import { checkInputs, Moderation } from '../../moderation/Moderation'
 import { formatResponse } from '../../outputparsers/OutputParserHelpers'
 
-type ObjectTool = StructuredTool
 const FINISH_NAME = 'finish'
 
 class AutoGPT_Agents implements INode {
@@ -146,7 +145,11 @@ class AutoGPT_Agents implements INode {
                     executor.fullMessageHistory.push(new AIMessage(assistantReply))
 
                     const action = await executor.outputParser.parse(assistantReply)
-                    const tools = executor.tools.reduce((acc, tool) => ({ ...acc, [tool.name]: tool }), {} as { [key: string]: ObjectTool })
+                    type ExecTool = (typeof executor)['tools'][number]
+                    const tools = executor.tools.reduce<Record<string, ExecTool>>((acc, t) => {
+                        acc[t.name] = t
+                        return acc
+                    }, {})
                     if (action.name === FINISH_NAME) {
                         return action.args.response
                     }

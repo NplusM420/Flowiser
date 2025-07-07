@@ -287,8 +287,19 @@ export class RedisEventPublisher implements IServerSideEventStreamer {
         }
     }
 
-    streamEndEvent(_: string) {
-        // placeholder for future use
+    streamEndEvent(chatId: string): void {
+        try {
+            this.redisPublisher.publish(
+                chatId,
+                JSON.stringify({
+                    chatId,
+                    eventType: 'end',
+                    data: '[DONE]'
+                })
+            )
+        } catch (error) {
+            console.error('Error streaming end event:', error)
+        }
     }
 
     streamErrorEvent(chatId: string, msg: string) {

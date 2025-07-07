@@ -124,6 +124,9 @@ export class RedisEventSubscriber {
             case 'metadata':
                 this.sseStreamer.streamMetadataEvent(chatId, data)
                 break
+            case 'end':
+                this.sseStreamer.streamEndEvent(chatId)
+                break
         }
     }
 

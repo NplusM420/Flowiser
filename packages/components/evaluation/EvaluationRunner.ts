@@ -38,7 +38,7 @@ export class EvaluationRunner {
                     let providerName = ''
                     for (let i = 0; i < val.length; i++) {
                         const metric = val[i]
-                        if (typeof metric === 'object') {
+                        if (typeof metric === 'object' && metric !== null) {
                             modelName = metric['model']
                             providerName = metric['provider']
                         } else {

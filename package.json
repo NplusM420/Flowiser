@@ -3,6 +3,7 @@
     "version": "3.0.2",
     "private": true,
     "homepage": "https://flowiseai.com",
+    "packageManager": "pnpm@8.14.0",
     "workspaces": [
         "packages/*",
         "flowise",
@@ -121,5 +122,8 @@
                 }
             ]
         ]
+    },
+    "dependencies": {
+        "langchain": "^0.3.29"
     }
 }

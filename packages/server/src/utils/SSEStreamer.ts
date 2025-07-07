@@ -8,6 +8,7 @@ type Client = {
     response: Response
     // optional property with default value
     started?: boolean
+    ended?: boolean
 }
 
 export class SSEStreamer implements IServerSideEventStreamer {
@@ -24,11 +25,6 @@ export class SSEStreamer implements IServerSideEventStreamer {
     removeClient(chatId: string) {
         const client = this.clients[chatId]
         if (client) {
-            const clientResponse = {
-                event: 'end',
-                data: '[DONE]'
-            }
-            client.response.write('message\ndata:' + JSON.stringify(clientResponse) + '\n\n')
             client.response.end()
             delete this.clients[chatId]
         }
@@ -201,8 +197,16 @@ export class SSEStreamer implements IServerSideEventStreamer {
         }
     }
 
-    streamEndEvent(_: string) {
-        // placeholder for future use
+    streamEndEvent(chatId: string): void {
+        const client = this.clients[chatId]
+        if (client && !client.ended) {
+            const clientResponse = {
+                event: 'end',
+                data: '[DONE]'
+            }
+            client.response.write('message\ndata:' + JSON.stringify(clientResponse) + '\n\n')
+            client.ended = true
+        }
     }
 
     streamErrorEvent(chatId: string, msg: string) {

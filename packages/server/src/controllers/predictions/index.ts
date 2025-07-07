@@ -76,12 +76,14 @@ const createPrediction = async (req: Request, res: Response, next: NextFunction)
 
                     const apiResponse = await predictionsServices.buildChatflow(req)
                     sseStreamer.streamMetadataEvent(apiResponse.chatId, apiResponse)
+                    sseStreamer.streamEndEvent(chatId)
                 } catch (error) {
                     if (chatId) {
                         sseStreamer.streamErrorEvent(chatId, getErrorMessage(error))
                     }
                     next(error)
                 } finally {
+                    sseStreamer.streamEndEvent(chatId)
                     sseStreamer.removeClient(chatId)
                 }
             } else {
