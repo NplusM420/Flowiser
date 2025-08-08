@@ -29,7 +29,8 @@
             "Bash(rg:*)",
             "Bash(pnpm lint:*)",
             "Bash(npx eslint:*)",
-            "Bash(curl:*)"
+            "Bash(curl:*)",
+            "Bash(pnpm test:*)"
         ],
         "deny": []
     }

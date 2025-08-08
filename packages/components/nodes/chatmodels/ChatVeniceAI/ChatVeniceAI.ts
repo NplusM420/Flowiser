@@ -1,8 +1,9 @@
 import { BaseCache } from '@langchain/core/caches'
-import { ICommonObject, IMultiModalOption, INode, INodeData, INodeParams } from '../../../src/Interface'
+import { ICommonObject, IMultiModalOption, INode, INodeData, INodeOptionsValue, INodeParams } from '../../../src/Interface'
 import { getBaseClasses, getCredentialData, getCredentialParam } from '../../../src/utils'
 import { ChatVeniceAI, ChatVeniceAIFields } from './FlowiseChatVeniceAI'
 import { ChatOpenAI } from '@langchain/openai'
+import { getModels, MODEL_TYPE } from '../../../src/modelLoader'
 
 class ChatVeniceAI_ChatModels implements INode {
     label: string
@@ -41,74 +42,8 @@ class ChatVeniceAI_ChatModels implements INode {
             {
                 label: 'Model Name',
                 name: 'modelName',
-                type: 'options',
-                options: [
-                    {
-                        label: 'Venice Uncensored 1.1',
-                        name: 'venice-uncensored',
-                        description: 'Venice AI uncensored model (32K context)'
-                    },
-                    {
-                        label: 'Venice Small',
-                        name: 'qwen3-4b',
-                        description: 'Fast, efficient model for simple tasks (32K context)'
-                    },
-                    {
-                        label: 'Venice Medium',
-                        name: 'mistral-31-24b',
-                        description: 'Balanced model with vision support (131K context)'
-                    },
-                    {
-                        label: 'Venice Large',
-                        name: 'qwen3-235b',
-                        description: 'Powerful model for complex tasks (131K context)'
-                    },
-                    {
-                        label: 'Venice Reasoning',
-                        name: 'qwen-2.5-qwq-32b',
-                        description: 'Specialized for reasoning tasks (32K context)'
-                    },
-                    {
-                        label: 'Llama 3.2 3B',
-                        name: 'llama-3.2-3b',
-                        description: 'Smallest, fastest Llama model (131K context)'
-                    },
-                    {
-                        label: 'Llama 3.3 70B',
-                        name: 'llama-3.3-70b',
-                        description: 'Latest Llama with function calling (65K context)'
-                    },
-                    {
-                        label: 'Llama 3.1 405B',
-                        name: 'llama-3.1-405b',
-                        description: 'Most intelligent Llama model (65K context)'
-                    },
-                    {
-                        label: 'Dolphin 72B',
-                        name: 'dolphin-2.9.2-qwen2-72b',
-                        description: 'Most uncensored model (32K context)'
-                    },
-                    {
-                        label: 'Qwen 2.5 VL 72B',
-                        name: 'qwen-2.5-vl',
-                        description: 'Vision-language model (32K context)'
-                    },
-                    {
-                        label: 'Qwen 2.5 Coder 32B',
-                        name: 'qwen-2.5-coder-32b',
-                        description: 'Optimized for coding tasks (32K context)'
-                    },
-                    {
-                        label: 'DeepSeek R1 671B',
-                        name: 'deepseek-r1-671b',
-                        description: 'Advanced reasoning model (131K context)'
-                    },
-                    {
-                        label: 'DeepSeek Coder V2 Lite',
-                        name: 'deepseek-coder-v2-lite',
-                        description: 'Lightweight coding model (131K context)'
-                    }
-                ],
+                type: 'asyncOptions',
+                loadMethod: 'listModels',
                 default: 'venice-uncensored'
             },
             {
@@ -191,6 +126,13 @@ class ChatVeniceAI_ChatModels implements INode {
                 optional: true
             }
         ]
+    }
+
+    //@ts-ignore
+    loadMethods = {
+        async listModels(): Promise<INodeOptionsValue[]> {
+            return await getModels(MODEL_TYPE.CHAT, 'chatVeniceAI')
+        }
     }
 
     async init(nodeData: INodeData, _: string, options: ICommonObject): Promise<any> {

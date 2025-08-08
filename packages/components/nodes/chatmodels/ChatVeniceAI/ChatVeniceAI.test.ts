@@ -23,17 +23,17 @@ describe('ChatVeniceAI', () => {
         expect(node.credential.credentialNames).toContain('veniceAIApi')
     })
 
-    it('should have model selection with correct options', () => {
+    it('should have model selection with asyncOptions', () => {
         const modelInput = node.inputs.find((input: any) => input.name === 'modelName')
         expect(modelInput).toBeDefined()
-        expect(modelInput?.type).toBe('options')
-        expect(modelInput?.options).toBeDefined()
+        expect(modelInput?.type).toBe('asyncOptions')
+        expect(modelInput?.loadMethod).toBe('listModels')
+        expect(modelInput?.default).toBe('venice-uncensored')
+    })
 
-        const modelNames = modelInput?.options?.map((opt: any) => opt.name)
-        expect(modelNames).toContain('venice-uncensored')
-        expect(modelNames).toContain('gpt-4o')
-        expect(modelNames).toContain('claude-3.5-sonnet')
-        expect(modelNames).toContain('llama-3.1-405b')
+    it('should have loadMethods with listModels function', () => {
+        expect(node.loadMethods).toBeDefined()
+        expect(typeof node.loadMethods.listModels).toBe('function')
     })
 
     it('should have streaming enabled by default', () => {
@@ -52,5 +52,29 @@ describe('ChatVeniceAI', () => {
         const imageInput = node.inputs.find((input: any) => input.name === 'allowImageUploads')
         expect(imageInput).toBeDefined()
         expect(imageInput?.default).toBe(true)
+    })
+
+    it('should have temperature with correct default', () => {
+        const temperatureInput = node.inputs.find((input: any) => input.name === 'temperature')
+        expect(temperatureInput).toBeDefined()
+        expect(temperatureInput?.default).toBe(0.7)
+        expect(temperatureInput?.type).toBe('number')
+        expect(temperatureInput?.step).toBe(0.1)
+    })
+
+    it('should have all required additional parameters', () => {
+        const additionalParams = ['maxTokens', 'topP', 'frequencyPenalty', 'presencePenalty', 'stopSequence']
+        additionalParams.forEach((param) => {
+            const input = node.inputs.find((input: any) => input.name === param)
+            expect(input).toBeDefined()
+            expect(input?.additionalParams).toBe(true)
+        })
+    })
+
+    it('should have cache parameter', () => {
+        const cacheInput = node.inputs.find((input: any) => input.name === 'cache')
+        expect(cacheInput).toBeDefined()
+        expect(cacheInput?.type).toBe('BaseCache')
+        expect(cacheInput?.optional).toBe(true)
     })
 })
